@@ -16,7 +16,7 @@
 
 * DL4J takes advantage of the latest distributed computing frameworks including Apache Spark and Hadoop to accelerate training. On multi-GPUs, it is equal to Caffe in performance.
 
-* The libraries are completely open-source, Apache 2.0, and maintained by the developer community and Skymind team.
+* The libraries are completely open-source, Apache 2.0, and maintained by the developer community and [Skymind](https://www.skymind.ai) team.
 
 * Deeplearning4j is written in Java and is compatible with any JVM language, such as Scala, Clojure or Kotlin. The underlying computations are written in C, C++ and Cuda. Keras will serve as the Python API.
 
