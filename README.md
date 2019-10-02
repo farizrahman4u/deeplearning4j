@@ -4,10 +4,8 @@
   <img src="https://www.zeljkoobrenovic.com/tools/tech/images/eclipse_deeplearning4j.png">
 </p>
 
-<p align="center">
- [![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://deeplearning4j.org/docs/latest/) 
+ [![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://deeplearning4j.org/docs/latest/)
 [![Gitter](https://img.shields.io/gitter/room/deeplearning4j/deeplearning4j.svg)](https://gitter.im/deeplearning4j/deeplearning4j)
-</p>
 
 [Eclipse Deeplearning4j](https://www.deeplearning4j.org/)  is the first commercial-grade, open-source, distributed deep-learning library written for Java and Scala. Integrated with Hadoop and Apache Spark, DL4J brings AI to business environments for use on distributed GPUs and CPUs.
 
