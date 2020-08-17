@@ -19,16 +19,20 @@ package org.nd4j.python4j;
 
 import org.bytedeco.cpython.PyThreadState;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.bytedeco.cpython.global.python.*;
 
 
 public class PythonGIL implements AutoCloseable {
-    private static PyThreadState mainThreadState;
+    private PyThreadState previousThreadState;
     private static final AtomicBoolean acquired = new AtomicBoolean();
     private boolean acquiredByMe = false;
     private static long defaultThreadId = -1;
+    private static Map<Long, PyThreadState> threadStateCache = new HashMap<>();
+
 
     public static void assertThreadSafe() {
         if (acquired.get()) {
@@ -58,9 +62,10 @@ public class PythonGIL implements AutoCloseable {
             }
 
         }
-        acquire();
         acquired.set(true);
         acquiredByMe = true;
+        acquire();
+
 
     }
 
@@ -74,20 +79,31 @@ public class PythonGIL implements AutoCloseable {
 
     }
 
+    private  PyThreadState getThreadState(PyThreadState previousThreadState){
+        long threadId = Thread.currentThread().getId();
+        PyThreadState ret = threadStateCache.get(threadId);
+        if (ret == null){
+            ret = PyThreadState_New(previousThreadState.interp());
+            threadStateCache.put(threadId, ret);
+        }
+        return ret;
+
+    }
+
     public static synchronized PythonGIL lock() {
         return new PythonGIL();
     }
 
-    private static synchronized void acquire() {
-        mainThreadState = PyEval_SaveThread();
-        PyThreadState ts = PyThreadState_New(mainThreadState.interp());
+    private  synchronized void acquire() {
+        previousThreadState = PyEval_SaveThread();
+        PyThreadState ts = getThreadState(previousThreadState);
         PyEval_RestoreThread(ts);
         PyThreadState_Swap(ts);
     }
 
-    private static void release() { // do not synchronize!
+    private  void release() { // do not synchronize!
         PyEval_SaveThread();
-        PyEval_RestoreThread(mainThreadState);
+        PyEval_RestoreThread(previousThreadState);
     }
 
     public static boolean locked(){
